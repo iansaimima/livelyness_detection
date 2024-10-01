@@ -30,12 +30,10 @@ class LivelynessDetectionScreenV2 extends StatefulWidget {
   });
 
   @override
-  State<LivelynessDetectionScreenV2> createState() =>
-      _LivelynessDetectionScreenAndroidState();
+  State<LivelynessDetectionScreenV2> createState() => _LivelynessDetectionScreenAndroidState();
 }
 
-class _LivelynessDetectionScreenAndroidState
-    extends State<LivelynessDetectionScreenV2> {
+class _LivelynessDetectionScreenAndroidState extends State<LivelynessDetectionScreenV2> {
   //* MARK: - Private Variables
   //? =========================================================
   final _faceDetectionController = BehaviorSubject<FaceDetectionModel>();
@@ -53,8 +51,7 @@ class _LivelynessDetectionScreenAndroidState
   bool _isProcessingStep = false;
 
   late final List<LivelynessStepItem> _steps;
-  final GlobalKey<LivelynessDetectionStepOverlayState> _stepsKey =
-      GlobalKey<LivelynessDetectionStepOverlayState>();
+  final GlobalKey<LivelynessDetectionStepOverlayState> _stepsKey = GlobalKey<LivelynessDetectionStepOverlayState>();
 
   CameraState? _cameraState;
   bool _isProcessing = false;
@@ -113,8 +110,7 @@ class _LivelynessDetectionScreenAndroidState
     final inputImage = img.toInputImage();
 
     try {
-      final List<Face> detectedFaces =
-          await faceDetector.processImage(inputImage);
+      final List<Face> detectedFaces = await faceDetector.processImage(inputImage);
       _faceDetectionController.add(
         FaceDetectionModel(
           faces: detectedFaces,
@@ -150,19 +146,13 @@ class _LivelynessDetectionScreenAndroidState
       final landmarks = firstFace.landmarks;
       // Get landmark positions for relevant facial features
       final Point<int>? leftEye = landmarks[FaceLandmarkType.leftEye]?.position;
-      final Point<int>? rightEye =
-          landmarks[FaceLandmarkType.rightEye]?.position;
-      final Point<int>? leftCheek =
-          landmarks[FaceLandmarkType.leftCheek]?.position;
-      final Point<int>? rightCheek =
-          landmarks[FaceLandmarkType.rightCheek]?.position;
+      final Point<int>? rightEye = landmarks[FaceLandmarkType.rightEye]?.position;
+      final Point<int>? leftCheek = landmarks[FaceLandmarkType.leftCheek]?.position;
+      final Point<int>? rightCheek = landmarks[FaceLandmarkType.rightCheek]?.position;
       final Point<int>? leftEar = landmarks[FaceLandmarkType.leftEar]?.position;
-      final Point<int>? rightEar =
-          landmarks[FaceLandmarkType.rightEar]?.position;
-      final Point<int>? leftMouth =
-          landmarks[FaceLandmarkType.leftMouth]?.position;
-      final Point<int>? rightMouth =
-          landmarks[FaceLandmarkType.rightMouth]?.position;
+      final Point<int>? rightEar = landmarks[FaceLandmarkType.rightEar]?.position;
+      final Point<int>? leftMouth = landmarks[FaceLandmarkType.leftMouth]?.position;
+      final Point<int>? rightMouth = landmarks[FaceLandmarkType.rightMouth]?.position;
 
       // Calculate symmetry values based on corresponding landmark positions
       final Map<String, double> symmetry = {};
@@ -197,12 +187,9 @@ class _LivelynessDetectionScreenAndroidState
       if (kDebugMode) {
         print("Face Symmetry: $average");
       }
-      if (_isProcessingStep &&
-          _steps[_stepsKey.currentState?.currentIndex ?? 0].step ==
-              LivelynessStep.blink) {
+      if (_isProcessingStep && _steps[_stepsKey.currentState?.currentIndex ?? 0].step == LivelynessStep.blink) {
         if (_didCloseEyes) {
-          if ((faces.first.leftEyeOpenProbability ?? 1.0) < 0.75 &&
-              (faces.first.rightEyeOpenProbability ?? 1.0) < 0.75) {
+          if ((faces.first.leftEyeOpenProbability ?? 1.0) < 0.75 && (faces.first.rightEyeOpenProbability ?? 1.0) < 0.75) {
             await _completeStep(
               step: _steps[_stepsKey.currentState?.currentIndex ?? 0].step,
             );
@@ -242,8 +229,7 @@ class _LivelynessDetectionScreenAndroidState
     switch (step) {
       case LivelynessStep.blink:
         const double blinkThreshold = 0.25;
-        if ((face.leftEyeOpenProbability ?? 1.0) < (blinkThreshold) &&
-            (face.rightEyeOpenProbability ?? 1.0) < (blinkThreshold)) {
+        if ((face.leftEyeOpenProbability ?? 1.0) < (blinkThreshold) && (face.rightEyeOpenProbability ?? 1.0) < (blinkThreshold)) {
           _startProcessing();
           if (mounted) {
             setState(
@@ -382,80 +368,36 @@ class _LivelynessDetectionScreenAndroidState
   @override
   Widget build(BuildContext context) {
     return Stack(
-      fit: StackFit.expand,
+      // fit: StackFit.expand,
       alignment: Alignment.center,
       children: [
-        _isInfoStepCompleted
-            ? CameraAwesomeBuilder.custom(
-                // flashMode: FlashMode.auto,
-                previewFit: CameraPreviewFit.contain,
-                // aspectRatio: CameraAspectRatios.ratio_16_9,
-                sensorConfig: SensorConfig.single(
-                  aspectRatio: CameraAspectRatios.ratio_16_9,
-                  flashMode: FlashMode.auto,
-                  sensor: Sensor.position(SensorPosition.front),
-                ),
-                onImageForAnalysis: (img) => _processCameraImage(img),
-                imageAnalysisConfig: AnalysisConfig(
-                  autoStart: true,
-                  androidOptions: const AndroidAnalysisOptions.nv21(
-                    width: 250,
+        // buildCameraPreview(),
+        // Layer di atas kamera dengan lubang berbentuk oval
+
+        // Layer putih dengan lubang oval di atas kamera
+        // Positioned.fill(
+        //   child: CustomPaint(
+        //     painter: OvalHolePainter(),
+        //     child: Container(
+        //       color: Colors.transparent,
+        //     ), // Layer kosong yang akan diwarnai
+        //   ),
+        // ),
+        Positioned.fill(
+            child: Container(
+              color: Colors.white, // Warna putih di seluruh layar
+              child: Center(
+                child: ClipOval(
+                  child: Container(
+                    width: 300, // Sesuaikan ukuran oval
+                    height: 400, // Sesuaikan ukuran oval
+                    child: buildCameraPreview()
                   ),
-                  maxFramesPerSecond: 30,
                 ),
-                builder: (state, preview) {
-                  _cameraState = state;
-                  return widget.config.showFacialVertices
-                      ? PreviewDecoratorWidget(
-                          cameraState: state,
-                          faceDetectionStream: _faceDetectionController,
-                          previewSize: PreviewSize(
-                            width: preview.previewSize.width,
-                            height: preview.previewSize.height,
-                          ),
-                          previewRect: preview.rect,
-                        )
-                      : const SizedBox();
-                },
-                // (state, previewSize, previewRect) {
-                //   _cameraState = state;
-                //   return PreviewDecoratorWidget(
-                //     cameraState: state,
-                //     faceDetectionStream: _faceDetectionController,
-                //     previewSize: previewSize,
-                //     previewRect: previewRect,
-                //     detectionColor:
-                //         _steps[_stepsKey.currentState?.currentIndex ?? 0]
-                //             .detectionColor,
-                //   );
-                // },
-                saveConfig: SaveConfig.photo(
-                  pathBuilder: (_) async {
-                    final String fileName = "${Utils.generate()}.jpg";
-                    final String path = await getTemporaryDirectory().then(
-                      (value) => value.path,
-                    );
-                    // return "$path/$fileName";
-                    return SingleCaptureRequest(
-                      "$path/$fileName",
-                      Sensor.position(
-                        SensorPosition.front,
-                      ),
-                    );
-                  },
-                ),
-              )
-            : LivelynessInfoWidget(
-                onStartTap: () {
-                  if (!mounted) {
-                    return;
-                  }
-                  _startTimer();
-                  setState(
-                    () => _isInfoStepCompleted = true,
-                  );
-                },
               ),
+            ),
+          ),
+
         if (_isInfoStepCompleted)
           LivelynessDetectionStepOverlay(
             key: _stepsKey,
@@ -478,8 +420,7 @@ class _LivelynessDetectionScreenAndroidState
                 onPressed: () => _takePicture(
                   didCaptureAutomatically: false,
                 ),
-                color: widget.config.captureButtonColor ??
-                    Theme.of(context).primaryColor,
+                color: widget.config.captureButtonColor ?? Theme.of(context).primaryColor,
                 textColor: Colors.white,
                 padding: const EdgeInsets.all(16),
                 shape: const CircleBorder(),
@@ -522,8 +463,85 @@ class _LivelynessDetectionScreenAndroidState
     );
   }
 
-  double calculateSymmetry(
-      Point<int>? leftPosition, Point<int>? rightPosition) {
+  StatefulWidget buildCameraPreview() => _isInfoStepCompleted ? buildCameraAwesomeBuilder() : buildLivelynessInfoWidget();
+
+  LivelynessInfoWidget buildLivelynessInfoWidget() {
+    return LivelynessInfoWidget(
+      onStartTap: () {
+        if (!mounted) {
+          return;
+        }
+        _startTimer();
+        setState(
+          () => _isInfoStepCompleted = true,
+        );
+      },
+    );
+  }
+
+  CameraAwesomeBuilder buildCameraAwesomeBuilder() {
+    return CameraAwesomeBuilder.custom(
+      // flashMode: FlashMode.auto,
+      previewFit: CameraPreviewFit.cover,
+      // aspectRatio: CameraAspectRatios.ratio_16_9,
+      sensorConfig: SensorConfig.single(
+        aspectRatio: CameraAspectRatios.ratio_16_9,
+        flashMode: FlashMode.auto,
+        sensor: Sensor.position(SensorPosition.front),
+      ),
+      onImageForAnalysis: (img) => _processCameraImage(img),
+      imageAnalysisConfig: AnalysisConfig(
+        autoStart: true,
+        androidOptions: const AndroidAnalysisOptions.nv21(
+          width: 250,
+        ),
+        maxFramesPerSecond: 30,
+      ),
+      builder: (state, preview) {
+        _cameraState = state;
+        return widget.config.showFacialVertices
+            ? PreviewDecoratorWidget(
+                cameraState: state,
+                faceDetectionStream: _faceDetectionController,
+                previewSize: PreviewSize(
+                  width: preview.previewSize.width,
+                  height: preview.previewSize.height,
+                ),
+                previewRect: preview.rect,
+              )
+            : const SizedBox();
+      },
+      // (state, previewSize, previewRect) {
+      //   _cameraState = state;
+      //   return PreviewDecoratorWidget(
+      //     cameraState: state,
+      //     faceDetectionStream: _faceDetectionController,
+      //     previewSize: previewSize,
+      //     previewRect: previewRect,
+      //     detectionColor:
+      //         _steps[_stepsKey.currentState?.currentIndex ?? 0]
+      //             .detectionColor,
+      //   );
+      // },
+      saveConfig: SaveConfig.photo(
+        pathBuilder: (_) async {
+          final String fileName = "${Utils.generate()}.jpg";
+          final String path = await getTemporaryDirectory().then(
+            (value) => value.path,
+          );
+          // return "$path/$fileName";
+          return SingleCaptureRequest(
+            "$path/$fileName",
+            Sensor.position(
+              SensorPosition.front,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  double calculateSymmetry(Point<int>? leftPosition, Point<int>? rightPosition) {
     if (leftPosition != null && rightPosition != null) {
       final double dx = (rightPosition.x - leftPosition.x).abs().toDouble();
       final double dy = (rightPosition.y - leftPosition.y).abs().toDouble();
@@ -533,5 +551,35 @@ class _LivelynessDetectionScreenAndroidState
     }
 
     return 0.0;
+  }
+}
+
+class OvalHolePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    // Membuat cat untuk warna putih
+    final paint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.fill;
+
+    // Gambar layer putih
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), paint);
+
+    // Buat lubang oval
+    Path ovalPath = Path()
+      ..addOval(Rect.fromCenter(
+        center: Offset(size.width / 2, size.height / 2), // Pusat oval
+        width: 300, // Lebar oval
+        height: 400, // Tinggi oval
+      ));
+
+    // Lubangi area oval pada layer putih
+    canvas.clipPath(ovalPath, doAntiAlias: true);
+    canvas.drawColor(Colors.transparent, BlendMode.clear);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
   }
 }

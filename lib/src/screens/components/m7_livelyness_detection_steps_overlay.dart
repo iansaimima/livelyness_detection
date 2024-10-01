@@ -156,14 +156,14 @@ class LivelynessDetectionStepOverlayState
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: const [
-                          BoxShadow(
-                            blurRadius: 5,
-                            spreadRadius: 2.5,
-                            color: Colors.black12,
-                          ),
-                        ],
+                        borderRadius: BorderRadius.circular(0),
+                        // boxShadow: const [
+                        //   BoxShadow(
+                        //     blurRadius: 5,
+                        //     spreadRadius: 2.5,
+                        //     color: Colors.black12,
+                        //   ),
+                        // ],
                       ),
                       alignment: Alignment.center,
                       margin: const EdgeInsets.symmetric(horizontal: 30),
@@ -173,7 +173,7 @@ class LivelynessDetectionStepOverlayState
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: Colors.black,
-                          fontSize: 24,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -199,7 +199,7 @@ class LivelynessDetectionStepOverlayState
     return isExiting
         ? ZoomOut(
             animate: true,
-            child: FadeOutLeft(
+            child: FadeOut(
               animate: true,
               delay: const Duration(milliseconds: 200),
               child: child,
@@ -207,10 +207,10 @@ class LivelynessDetectionStepOverlayState
           )
         : ZoomIn(
             animate: true,
-            delay: const Duration(milliseconds: 500),
-            child: FadeInRight(
+            delay: const Duration(milliseconds: 100),
+            child: FadeIn(
               animate: true,
-              delay: const Duration(milliseconds: 700),
+              delay: const Duration(milliseconds: 200),
               child: child,
             ),
           );
