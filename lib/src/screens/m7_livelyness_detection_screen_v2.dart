@@ -387,13 +387,7 @@ class _LivelynessDetectionScreenAndroidState extends State<LivelynessDetectionSc
             child: Container(
               color: Colors.white, // Warna putih di seluruh layar
               child: Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: buildCameraPreview()
-                  ),
-                ),
+                child: buildCameraPreview(),
               ),
             ),
           ),
