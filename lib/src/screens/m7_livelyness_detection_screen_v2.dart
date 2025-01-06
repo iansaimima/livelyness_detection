@@ -384,13 +384,35 @@ class _LivelynessDetectionScreenAndroidState extends State<LivelynessDetectionSc
         //   ),
         // ),
         Positioned.fill(
-            child: Container(
-              color: Colors.white, // Warna putih di seluruh layar
-              child: Center(
-                child: buildCameraPreview(),
+          child: Container(
+            color: Colors.white, // Warna putih di seluruh layar
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: AspectRatio(
+                    aspectRatio: 3/4,
+                    child: Stack(
+                      children: [
+                        buildCameraPreview(),
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(64),
+                            child: CustomPaint(
+                              size: Size(160, 260), // Sesuaikan ukuran dengan layar
+                              painter: OvalLinePainter(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
+        ),
 
         if (_isInfoStepCompleted)
           LivelynessDetectionStepOverlay(
@@ -545,6 +567,29 @@ class _LivelynessDetectionScreenAndroidState extends State<LivelynessDetectionSc
     }
 
     return 0.0;
+  }
+}
+
+class OvalLinePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint paint = Paint()
+      ..color = Colors.yellow // Warna garis oval
+      ..strokeWidth = 4 // Ketebalan garis
+      ..style = PaintingStyle.stroke; // Garis tepi saja (outline)
+
+    final Rect rect = Rect.fromCenter(
+      center: Offset(size.width / 2, size.height / 2), // Posisi di tengah layar
+      width: size.width, // Lebar oval 80% dari layar
+      height: size.height, // Tinggi oval 40% dari layar
+    );
+
+    canvas.drawOval(rect, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false; // Tidak perlu repaint jika tidak ada perubahan
   }
 }
 
