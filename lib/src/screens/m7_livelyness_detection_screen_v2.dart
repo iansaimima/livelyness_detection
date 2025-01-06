@@ -388,9 +388,8 @@ class _LivelynessDetectionScreenAndroidState extends State<LivelynessDetectionSc
               color: Colors.white, // Warna putih di seluruh layar
               child: Center(
                 child: ClipOval(
-                  child: Container(
-                    width: 300, // Sesuaikan ukuran oval
-                    height: 400, // Sesuaikan ukuran oval
+                  child: AspectRatio(
+                    aspectRatio: 1,
                     child: buildCameraPreview()
                   ),
                 ),
